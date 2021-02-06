@@ -4,8 +4,35 @@
   width: 100%;
   transition: opacity 0.6s 0.1s, transform 0.6s 0.1s;
 }
+
 .fadeIn {
   opacity: 1;
   width: 100%;
   transition: opacity 0.6s 0.6s, transform 0.6s 0.6s;
+}
+
+.grow {
+  left: 28px;
+  top: 3px;
+  transform: scale(1.6);
+  margin-right: 8px;
+  background-color: #fff;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #005940;
+  border-color: transparent;
+  font-size: 14pt;
+}
+.btn-primary:disabled {
+  opacity: 0;
+}
+.btn-primary:hover {
+  background-color: #000;
+}
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus {
+  background-color: #000 !important;
 }

@@ -16,7 +16,8 @@ export const Foreground = styled.div`
   align-items: center;
   padding: ${Spacing.PADDING};
   border-radius: ${Spacing.BORDER_RADIUS};
-  width: 40vw;
+  width: 80vw;
+  max-width: 800px;
 `;
 
 export const MagicBox = styled.input`
@@ -38,4 +39,13 @@ export const MagicBox = styled.input`
   text-align: left;
   font-size: 80pt;
   color: #005940;
+`;
+
+export const PopupLink = styled.a`
+  color: #005940;
+  text-decoration: underline;
+  &:hover {
+    cursor: pointer;
+    color: #000000;
+  }
 `;
