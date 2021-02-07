@@ -1,13 +1,23 @@
 import { getTransactionSecret } from "api/Stripe";
 import Button from "react-bootstrap/Button";
 import React, { RefObject, useEffect, useRef, useState } from "react";
-import { Background, Foreground, MagicBox, PopupLink } from "./Home.styles";
+import {
+  Background,
+  Currency,
+  Foreground,
+  MagicBox,
+  PopupLink,
+} from "./Home.styles";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import FormCheck from "react-bootstrap/FormCheck";
 import Modal from "react-bootstrap/Modal";
+import Alert from "react-bootstrap/Alert";
+import { useHistory } from "react-router-dom";
 import "./Home.css";
 
 const HomePage: React.FC = () => {
+  const history = useHistory();
+
   const stripe = useStripe();
   const elements = useElements();
   const cardElement = elements && elements.getElement(CardElement);
@@ -15,24 +25,47 @@ const HomePage: React.FC = () => {
   const magicRef = useRef<HTMLInputElement>();
   const [magicNumber, setMagicNumber] = useState<"How much?" | number>();
   const [agree, setAgree] = useState(false);
+  const [cardComplete, setCardComplete] = useState(false);
   const [termsLive, setTermsLive] = useState(false);
   const [privacyLive, setPrivacyLive] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const [error, setError] = useState<Error | null>();
 
   useEffect(() => {
     if (magicRef.current) magicRef.current.focus();
   }, []);
 
   const handleSubmit = async () => {
-    if (!elements || !stripe) return;
-    const card = elements.getElement(CardElement);
-    if (!card) return;
+    setSubmitting(true);
+    try {
+      if (!elements || !stripe) throw Error("Can't load stripe");
+      const card = elements.getElement(CardElement);
+      if (!card) throw Error("Can't load stripe");
 
-    const secret = await getTransactionSecret();
-    const res = await stripe.confirmCardPayment(secret, {
-      payment_method: {
-        card,
-      },
-    });
+      if (typeof magicNumber !== "number" || magicNumber <= 0)
+        throw Error("Invalid amount");
+
+      const secret = await getTransactionSecret(magicNumber as number);
+      const res = await stripe.confirmCardPayment(secret, {
+        payment_method: {
+          card,
+        },
+      });
+      if (res.paymentIntent && res.paymentIntent.status === "succeeded") {
+        history.push("/thanks", { amount: magicNumber as number });
+      } else {
+        throw Error(
+          res.paymentIntent && res.paymentIntent.last_payment_error
+            ? res.paymentIntent.last_payment_error.message
+            : "Stripe error"
+        );
+      }
+    } catch (err) {
+      setError(err);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -87,20 +120,30 @@ const HomePage: React.FC = () => {
         </Modal.Footer>
       </Modal>
       <Foreground>
-        <MagicBox
-          ref={magicRef as RefObject<HTMLInputElement>}
-          type="number"
-          placeholder="How much?"
-          value={magicNumber}
-          onChange={(event) => {
-            setMagicNumber(parseFloat(event.target.value));
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
           }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && cardElement) {
-              cardElement.focus();
-            }
-          }}
-        />
+        >
+          <Currency className={!!magicNumber ? "currencyIn" : "currencyOut"}>
+            $
+          </Currency>
+          <MagicBox
+            ref={magicRef as RefObject<HTMLInputElement>}
+            type="number"
+            placeholder="How much?"
+            value={magicNumber}
+            onChange={(event) => {
+              setMagicNumber(parseFloat(event.target.value));
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && cardElement) {
+                cardElement.focus();
+              }
+            }}
+          />
+        </div>
         <div className={!!magicNumber ? "fadeIn" : "fadeOut"}>
           <div
             style={{
@@ -111,6 +154,9 @@ const HomePage: React.FC = () => {
             }}
           >
             <CardElement
+              onChange={(val) => {
+                setCardComplete(val.complete);
+              }}
               options={{
                 style: {
                   base: {
@@ -164,17 +210,71 @@ const HomePage: React.FC = () => {
           <div
             style={{
               display: "flex",
+              flexDirection: "column",
               width: "100%",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <Button disabled={!agree} onClick={handleSubmit} variant="primary">
-              Pay
+            <Button
+              disabled={!agree || !cardComplete || submitting}
+              onClick={handleSubmit}
+              variant="primary"
+            >
+              {submitting ? "Submitting..." : "Pay"}
             </Button>
+            <div className={!cardComplete ? "fadeIn" : "fadeOut"}>
+              <p
+                style={{
+                  fontSize: "8pt",
+                  marginTop: "16px",
+                  color: "#005940",
+                  textAlign: "center",
+                }}
+              >
+                You have not entered a valid credit card.{" "}
+              </p>
+            </div>
+            <div className={!agree ? "fadeIn" : "fadeOut"}>
+              <p
+                style={{
+                  fontSize: "8pt",
+                  color: "#005940",
+                  textAlign: "center",
+                }}
+              >
+                You have not read and agreed to the{" "}
+                <PopupLink onClick={() => setTermsLive(true)}>
+                  Terms and Conditions
+                </PopupLink>{" "}
+                and{" "}
+                <PopupLink onClick={() => setPrivacyLive(true)}>
+                  Privacy Policy
+                </PopupLink>
+                .
+              </p>
+            </div>
           </div>
         </div>
       </Foreground>
+      {!!error && (
+        <div
+          style={{
+            position: "absolute",
+            background: "rgba(0, 0, 0, 0.3)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <Alert variant="danger" onClose={() => setError(null)} dismissible>
+            <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+            <p>{error?.message}</p>
+          </Alert>
+        </div>
+      )}
     </Background>
   );
 };

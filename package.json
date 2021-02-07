@@ -1,4 +1,5 @@
 {
+  "homepage": "https://mpekala23.github.io/how-much",
   "name": "how-much",
   "version": "0.1.0",
   "private": true,
@@ -21,6 +22,7 @@
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
+    "react-share": "^4.3.1",
     "stripe": "^8.134.0",
     "styled-components": "^5.2.1",
     "typescript": "^4.1.2",
@@ -30,7 +32,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "yarn run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -54,6 +58,7 @@
     "@types/jquery": "^3.5.5",
     "@types/react-router-dom": "^5.1.7",
     "@types/stripe": "^8.0.417",
-    "@types/styled-components": "^5.1.7"
+    "@types/styled-components": "^5.1.7",
+    "gh-pages": "^3.1.0"
   }
 }

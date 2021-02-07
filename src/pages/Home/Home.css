@@ -11,6 +11,16 @@
   transition: opacity 0.6s 0.6s, transform 0.6s 0.6s;
 }
 
+.currencyOut {
+  opacity: 0;
+  transition: opacity 0.6s 0.1s, transform 0.6s 0.1s;
+}
+
+.currencyIn {
+  opacity: 1;
+  transition: opacity 0.6s 0.6s, transform 0.6s 0.6s;
+}
+
 .grow {
   left: 28px;
   top: 3px;
@@ -26,7 +36,8 @@
   font-size: 14pt;
 }
 .btn-primary:disabled {
-  opacity: 0;
+  opacity: 0.4;
+  background-color: #000;
 }
 .btn-primary:hover {
   background-color: #000;

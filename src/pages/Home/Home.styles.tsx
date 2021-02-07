@@ -41,6 +41,12 @@ export const MagicBox = styled.input`
   color: #005940;
 `;
 
+export const Currency = styled.p`
+  font-size: 80pt;
+  color: #005940;
+  transform: translateY(6px);
+`;
+
 export const PopupLink = styled.a`
   color: #005940;
   text-decoration: underline;
