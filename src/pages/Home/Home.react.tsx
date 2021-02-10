@@ -23,7 +23,7 @@ const HomePage: React.FC = () => {
   const cardElement = elements && elements.getElement(CardElement);
 
   const magicRef = useRef<HTMLInputElement>();
-  const [magicNumber, setMagicNumber] = useState<"How much?" | number>();
+  const [magicNumber, setMagicNumber] = useState<string>();
   const [agree, setAgree] = useState(false);
   const [cardComplete, setCardComplete] = useState(false);
   const [termsLive, setTermsLive] = useState(false);
@@ -43,19 +43,19 @@ const HomePage: React.FC = () => {
       const card = elements.getElement(CardElement);
       if (!card) throw Error("Can't load stripe");
 
-      if (typeof magicNumber !== "number" || magicNumber <= 0)
-        throw Error("Invalid amount");
+      if (!magicNumber) throw Error("No amount entered");
 
-      const secret = await getTransactionSecret(magicNumber as number);
-      history.push("/thanks", { amount: magicNumber as number });
-      /* 
+      const num = parseInt(magicNumber);
+      if (!num || isNaN(num)) throw Error("Not a valid number");
+
+      const secret = await getTransactionSecret(num);
       const res = await stripe.confirmCardPayment(secret, {
         payment_method: {
           card,
         },
       });
       if (res.paymentIntent && res.paymentIntent.status === "succeeded") {
-        history.push("/thanks", { amount: magicNumber as number });
+        history.push("/thanks", { amount: num });
       } else {
         throw Error(
           res.paymentIntent && res.paymentIntent.last_payment_error
@@ -63,7 +63,6 @@ const HomePage: React.FC = () => {
             : "Stripe error"
         );
       }
-      */
     } catch (err) {
       setError(err);
     } finally {
@@ -135,15 +134,40 @@ const HomePage: React.FC = () => {
           </Currency>
           <MagicBox
             ref={magicRef as RefObject<HTMLInputElement>}
-            type="number"
             placeholder="How much?"
             value={magicNumber}
             onChange={(event) => {
-              setMagicNumber(parseFloat(event.target.value));
+              if (!event.target.value.length) setMagicNumber("");
+              else setMagicNumber(event.target.value);
             }}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && cardElement) {
+              if ((e.key === "Enter" || e.key === "Tab") && cardElement) {
                 cardElement.focus();
+              }
+              const theEvent = e || window.event;
+
+              // Handle paste
+              if (theEvent.type === "paste") {
+                theEvent.preventDefault();
+                return;
+              }
+              // Handle key press
+              const key = theEvent.key;
+              console.log(key);
+              const regex = /[0-9]|\./;
+              if (
+                !regex.test(key) &&
+                key !== "Backspace" &&
+                key !== "Delete" &&
+                key !== "ArrowLeft" &&
+                key !== "ArrowRight"
+              ) {
+                theEvent.preventDefault();
+                return;
+              }
+              if (regex.test(key) && magicNumber && magicNumber.length >= 9) {
+                theEvent.preventDefault();
+                return;
               }
             }}
           />
