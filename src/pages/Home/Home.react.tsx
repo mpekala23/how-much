@@ -47,6 +47,8 @@ const HomePage: React.FC = () => {
         throw Error("Invalid amount");
 
       const secret = await getTransactionSecret(magicNumber as number);
+      history.push("/thanks", { amount: magicNumber as number });
+      /* 
       const res = await stripe.confirmCardPayment(secret, {
         payment_method: {
           card,
@@ -61,6 +63,7 @@ const HomePage: React.FC = () => {
             : "Stripe error"
         );
       }
+      */
     } catch (err) {
       setError(err);
     } finally {
@@ -75,25 +78,26 @@ const HomePage: React.FC = () => {
           <Modal.Title>Terms and Conditions</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>
+          <p style={{ display: "none" }}>
             THE LEGAL AGREEMENT SET OUT BELOW GOVERNS YOUR USE OF HOWMUCH.ROCKS.
             TO AGREE TO THESE TERMS AND CONDITIONS, CLICK “AGREE.” IF YOU DO NOT
             AGREE TO THESE TERMS AND CONDITIONS, DO NOT CLICK “AGREE,” AND DO
             NOT USE HOWMUCH.ROCKS.{" "}
           </p>
           <p>
-            BS Holding Company, LLC is not responsible for any damages of any
-            kind arising from the use of howmuch.rocks, including loss of all
-            funds sent. By submitting a payment through howmuch.rocks the user
-            consents to fully forfeit their payment without the chance for
-            refund. To maximize security, BS Holding Company, LLC does not hold
-            your payment information, which is held by a 3rd party, Stripe Inc.
-            BS Holding Company, LLC is not a non-profit organization and
-            payments do not count as tax-deductible donations. The user
-            acknowledges that BS Holding Company, LLC will provide no services
-            in exchange for the user’s payment. User purchases on howmuch.rocks
-            are just a status symbol. The user is free to stop using
-            howmuch.rocks at any time.
+            howmuch.rocks is not responsible for any damages of any kind arising
+            from the use of howmuch.rocks, including loss of all funds sent. By
+            submitting a payment through howmuch.rocks the user consents to
+            fully forfeit their payment without the chance for refund. To
+            maximize security, howmuch.rocks does not hold your payment
+            information, which is held by a 3rd party, Stripe Inc.
+          </p>
+          <p>
+            howmuch.rocks is not a non-profit organization and payments do not
+            count as tax-deductible donations. The user acknowledges that
+            howmuch.rocks will provide no services in exchange for the user’s
+            payment. User purchases on howmuch.rocks are just a status symbol.
+            The user is free to stop using howmuch.rocks at any time.
           </p>
         </Modal.Body>
         <Modal.Footer>
@@ -104,12 +108,12 @@ const HomePage: React.FC = () => {
       </Modal>
       <Modal show={privacyLive} onHide={() => setPrivacyLive(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Terms and Conditions</Modal.Title>
+          <Modal.Title>Privacy Policy</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            No user personal information will be held or shared by BS Holding
-            Company, LLC. All payment information will be proceeded through
+            No user personal information will be held or shared by
+            howmuch.rocks. All payment information will be proceeded through
             Stripe Inc. Users can direct their questions to howmuch@gmail.com.
           </p>
         </Modal.Body>
