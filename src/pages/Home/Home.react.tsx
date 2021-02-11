@@ -22,7 +22,7 @@ const HomePage: React.FC = () => {
   const elements = useElements();
   const cardElement = elements && elements.getElement(CardElement);
 
-  const magicRef = useRef<HTMLInputElement>();
+  const magicRef = useRef<HTMLTextAreaElement>();
   const [magicNumber, setMagicNumber] = useState<string>();
   const [agree, setAgree] = useState(false);
   const [cardComplete, setCardComplete] = useState(false);
@@ -48,6 +48,10 @@ const HomePage: React.FC = () => {
       const num = parseInt(magicNumber);
       if (!num || isNaN(num)) throw Error("Not a valid number");
 
+      history.push("/thanks", { amount: num });
+      return;
+      /*
+
       const secret = await getTransactionSecret(num);
       const res = await stripe.confirmCardPayment(secret, {
         payment_method: {
@@ -63,6 +67,7 @@ const HomePage: React.FC = () => {
             : "Stripe error"
         );
       }
+      */
     } catch (err) {
       setError(err);
     } finally {
@@ -77,26 +82,25 @@ const HomePage: React.FC = () => {
           <Modal.Title>Terms and Conditions</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p style={{ display: "none" }}>
+          <p>
             THE LEGAL AGREEMENT SET OUT BELOW GOVERNS YOUR USE OF HOWMUCH.ROCKS.
             TO AGREE TO THESE TERMS AND CONDITIONS, CLICK “AGREE.” IF YOU DO NOT
             AGREE TO THESE TERMS AND CONDITIONS, DO NOT CLICK “AGREE,” AND DO
-            NOT USE HOWMUCH.ROCKS.{" "}
+            NOT USE HOWMUCH.ROCKS.
           </p>
           <p>
-            howmuch.rocks is not responsible for any damages of any kind arising
-            from the use of howmuch.rocks, including loss of all funds sent. By
-            submitting a payment through howmuch.rocks the user consents to
-            fully forfeit their payment without the chance for refund. To
-            maximize security, howmuch.rocks does not hold your payment
-            information, which is held by a 3rd party, Stripe Inc.
-          </p>
-          <p>
-            howmuch.rocks is not a non-profit organization and payments do not
-            count as tax-deductible donations. The user acknowledges that
-            howmuch.rocks will provide no services in exchange for the user’s
-            payment. User purchases on howmuch.rocks are just a status symbol.
-            The user is free to stop using howmuch.rocks at any time.
+            BS Holding Company, LLC is not responsible for any damages of any
+            kind arising from the use of howmuch.rocks, including loss of all
+            funds sent. By submitting a payment through howmuch.rocks the user
+            consents to fully forfeit their payment without the chance for
+            refund. To maximize security, BS Holding Company, LLC does not hold
+            your payment information, which is held by a 3rd party, Stripe Inc.
+            BS Holding Company, LLC is not a non-profit organization and
+            payments do not count as tax-deductible donations. The user
+            acknowledges that BS Holding Company, LLC will provide no services
+            in exchange for the user’s payment. User purchases on howmuch.rocks
+            are just a status symbol. The user is free to stop using
+            howmuch.rocks at any time.
           </p>
         </Modal.Body>
         <Modal.Footer>
@@ -111,9 +115,10 @@ const HomePage: React.FC = () => {
         </Modal.Header>
         <Modal.Body>
           <p>
-            No user personal information will be held or shared by
-            howmuch.rocks. All payment information will be proceeded through
-            Stripe Inc. Users can direct their questions to howmuch@gmail.com.
+            No user personal information will be held or shared by BS Holding
+            Company, LLC. All payment information will be proceeded through
+            Stripe Inc. Users can direct their questions to
+            bsholdingcompanylls@gmail.com.
           </p>
         </Modal.Body>
         <Modal.Footer>
@@ -133,7 +138,8 @@ const HomePage: React.FC = () => {
             $
           </Currency>
           <MagicBox
-            ref={magicRef as RefObject<HTMLInputElement>}
+            ref={magicRef as RefObject<HTMLTextAreaElement>}
+            style={{ height: magicNumber ? "120px" : "260px" }}
             placeholder="How much?"
             value={magicNumber}
             onChange={(event) => {

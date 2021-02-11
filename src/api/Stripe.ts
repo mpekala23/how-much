@@ -1,6 +1,7 @@
 import { API_URL } from "./Common";
 
 export async function getTransactionSecret(amount: number): Promise<string> {
+  return "dummy token";
   const secret = await fetch(
     `${API_URL}stripeSecret?amount=${Math.floor(amount) * 100}`
   );
@@ -10,5 +11,3 @@ export async function getTransactionSecret(amount: number): Promise<string> {
   }
   return clean.secret;
 }
-
-export async function confirmTransaction() {}

@@ -18,9 +18,13 @@ export const Foreground = styled.div`
   border-radius: ${Spacing.BORDER_RADIUS};
   width: 80vw;
   max-width: 800px;
+  @media only screen and (max-device-width: 640px) {
+    width: 90vw;
+    padding: 0px;
+  }
 `;
 
-export const MagicBox = styled.input`
+export const MagicBox = styled.textarea`
   width: 100%;
   background: transparent;
   border-width: 0px;
@@ -39,12 +43,21 @@ export const MagicBox = styled.input`
   text-align: left;
   font-size: 80pt;
   color: #005940;
+  overflow: hidden;
+  resize: none;
+  @media only screen and (max-device-width: 640px) {
+    font-size: 60pt;
+  }
 `;
 
 export const Currency = styled.p`
   font-size: 80pt;
   color: #005940;
-  transform: translateY(6px);
+  @media only screen and (max-device-width: 640px) {
+    font-size: 60pt;
+    transform: translateY(2px);
+  }
+  transform: translateY(-8px);
 `;
 
 export const PopupLink = styled.a`
