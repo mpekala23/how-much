@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import Home from "pages/Home/Home.react";
+import Information from "pages/Information/Information.react";
 import Thanks from "pages/Thanks/Thanks.react";
 
 const Router: React.FC = () => {
@@ -10,6 +11,9 @@ const Router: React.FC = () => {
       <Switch>
         <Route path="/thanks">
           <Thanks />
+        </Route>
+        <Route path="/information">
+          <Information />
         </Route>
         <Route>
           <Home />

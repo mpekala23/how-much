@@ -113,7 +113,7 @@ const HomePage: React.FC = () => {
             No user personal information will be held or shared by BS Holding
             Company, LLC. All payment information will be proceeded through
             Stripe Inc. Users can direct their questions to
-            bsholdingcompanylls@gmail.com.
+            bsholdingcompanyllc@gmail.com.
           </p>
         </Modal.Body>
         <Modal.Footer>
