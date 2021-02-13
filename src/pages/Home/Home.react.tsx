@@ -48,10 +48,6 @@ const HomePage: React.FC = () => {
       const num = parseInt(magicNumber);
       if (!num || isNaN(num)) throw Error("Not a valid number");
 
-      history.push("/thanks", { amount: num });
-      return;
-      /*
-
       const secret = await getTransactionSecret(num);
       const res = await stripe.confirmCardPayment(secret, {
         payment_method: {
@@ -67,7 +63,6 @@ const HomePage: React.FC = () => {
             : "Stripe error"
         );
       }
-      */
     } catch (err) {
       setError(err);
     } finally {
@@ -159,7 +154,6 @@ const HomePage: React.FC = () => {
               }
               // Handle key press
               const key = theEvent.key;
-              console.log(key);
               const regex = /[0-9]|\./;
               if (
                 !regex.test(key) &&
